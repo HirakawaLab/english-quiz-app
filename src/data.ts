@@ -25,6 +25,13 @@ export const addedQuestions:Question[]=[
 {id:"entrance-2026-14",stem:"It was nice ____ drive me to the station.",choices:["for you to", "if you", "of you to", "that you"],answer:2,explanation:"It is + 人の性質を表す形容詞 + of + 人 + to ... の形です。nice of you to ... で「〜してくれて親切だった」。",translation:"駅まで車で送ってくださってありがとうございました。",source:"2026年度 英語 問題14"},
 {id:"entrance-2026-15",stem:"Could you give me ____, please?",choices:["advising", "a piece of advice", "few advice", "to advise"],answer:1,explanation:"advice は不可算名詞です。「ひとつの助言」は a piece of advice と表します。",translation:"ひとつアドバイスをいただけますか。",source:"2026年度 英語 問題15"}
 ];
+export const additionalPhotoQuestions:Question[]=[
+{id:"grammar-photo-2573-01",stem:"He is in France now but he never ____ to his girlfriend.",choices:["write","writes","writing","written"],answer:1,explanation:"he は三人称単数で、never は普段の習慣を表しています。一般動詞 write の現在形は writes になります。",translation:"彼は今フランスにいますが、ガールフレンドには決して手紙を書きません。",source:"差がつく15題 写真 問題1"},
+{id:"grammar-photo-2573-02",stem:"My mother ____ breakfast before I go to school every morning.",choices:["cook","cooks","cooking","cooked"],answer:1,explanation:"every morning は繰り返す習慣を表します。主語 My mother は三人称単数なので cooks を選びます。",translation:"母は毎朝、私が学校へ行く前に朝食を作ります。",source:"差がつく15題 写真 問題2"},
+{id:"grammar-photo-2573-03",stem:"What do you ____ this food in English?",choices:["talk","say","speak","call"],answer:3,explanation:"call + 目的語 + 名詞で『〜を…と呼ぶ』です。What do you call this food in English? は『この食べ物を英語で何と呼びますか』という意味です。",translation:"この食べ物を英語で何と呼びますか。",source:"差がつく15題 写真 問題3"},
+{id:"grammar-photo-2573-04",stem:"Please ____ me something about your new school life.",choices:["name","tell","give to","speak to"],answer:1,explanation:"tell + 人 + 物・内容で『人に〜を話す』。tell me something が正しい語順です。",translation:"新しい学校生活について何か私に話してください。",source:"差がつく15題 写真 問題4"},
+{id:"grammar-photo-2573-05",stem:"From these stations on the moon, humans will be able to ____ Mars or other planets.",choices:["stay","visit","come","walk"],answer:1,explanation:"be able to の後には動詞の原形を置きます。visit は他動詞なので Mars を直接目的語にできます。stay や come は通常、場所を示す前置詞が必要です。",translation:"月にあるこれらの基地から、人類は火星やほかの惑星を訪れることができるようになるでしょう。",source:"差がつく15題 写真 問題5"}
+];
 export const blankQuestion=():Question=>({id:crypto.randomUUID(),stem:'',choices:['','','',''],answer:null,explanation:'',translation:'',source:'写真から登録'});
 // OCR is an imperfect extraction aid. Never infer an answer key from OCR.
 export function parseOcr(text:string):Question[]{
