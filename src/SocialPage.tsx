@@ -20,7 +20,8 @@ export default function SocialPage(){
  const pool=useMemo(()=>reviewOnly?topic.questions.filter(q=>reviewIds.includes(q.id)):topic.questions,[topic,reviewOnly,reviewIds]);
  const current=pool[index]??pool[0];
  const topicSolved=topic.questions.filter(q=>(history[q.id]?.attempts??0)>0).length;
- const totalSolved=socialTopics.flatMap(t=>t.questions).filter(q=>(history[q.id]?.attempts??0)>0).length;
+ const allQuestions=socialTopics.flatMap(t=>t.questions);
+ const totalSolved=allQuestions.filter(q=>(history[q.id]?.attempts??0)>0).length;
  const resetAnswer=()=>{setIndex(0);setSelected(null);setRevealed(false)};
  const chooseTopic=(id:SocialTopic['id'])=>{setTopicId(id);setView('read');setReviewOnly(false);setReviewIds([]);resetAnswer()};
  const openQuiz=()=>{setView('quiz');setReviewOnly(false);setReviewIds([]);resetAnswer()};
@@ -30,7 +31,7 @@ export default function SocialPage(){
  };
  const navigate=(direction:number)=>{setIndex(i=>Math.max(0,Math.min(pool.length-1,i+direction)));setSelected(null);setRevealed(false)};
  return <div className="social-app">
-  <div className="social-hero"><div><span className="eyebrow">HISTORY · WORLD HISTORY</span><h1>社会 <span>世界史を学ぶ</span></h1><p>解説で流れをつかみ、4択問題で理解を確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{totalSolved}<small> / 3 問</small></strong></div></div>
+  <div className="social-hero"><div><span className="eyebrow">HISTORY · WORLD HISTORY</span><h1>社会 <span>世界史を学ぶ</span></h1><p>解説で流れをつかみ、4択問題で理解を確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{totalSolved}<small> / {allQuestions.length} 問</small></strong></div></div>
   <div className="social-topic-tabs" role="group" aria-label="学習テーマ">
    {socialTopics.map(t=><button key={t.id} className={topicId===t.id?'current':''} onClick={()=>chooseTopic(t.id)}><Library size={18}/><span><strong>{t.title}</strong><small>{t.subtitle}</small></span><span className="social-topic-count">{t.questions.length}問</span></button>)}
   </div>
@@ -41,7 +42,7 @@ export default function SocialPage(){
    <section className="social-summary"><span className="social-kicker">この単元のポイント</span><p>{topic.overview}</p><ul>{topic.overviewPoints.map((p,i)=><li key={i}>{p}</li>)}</ul></section>
    <section className="social-section"><div className="social-section-heading"><Clock3 size={21}/><h3>時代の流れ</h3></div><div className="history-timeline">{topic.timeline.map((item,i)=><div className="history-event" key={i}><div className="history-date">{item.date}</div><div className="history-event-text">{item.description}</div></div>)}</div></section>
    <section className="social-section"><div className="social-section-heading"><BookOpen size={21}/><h3>重要事項の解説</h3></div><div className="social-lessons">{topic.sections.map((section,i)=><article key={i} className="social-lesson"><h4>{section.heading}</h4><p>{section.body}</p>{section.highlights&&<div className="key-points"><span>要点</span><ul>{section.highlights.map((point,j)=><li key={j}>{point}</li>)}</ul></div>}</article>)}</div></section>
-   <section className="social-section"><details className="photo-references"><summary><ImageIcon size={19}/> 参考：写真の原資料を見る <ChevronDown size={18}/></summary><p>文字を読み取り、上の解説として整理しています。原資料にある地図・図解や詳しい文章もここから確認できます。</p>{topic.sourceImages.map(im=><figure key={im.src}><img src={im.src} loading="lazy" alt={im.caption}/><figcaption>{im.caption}</figcaption></figure>)}</details></section>
+   {topic.sourceImages.length>0&&<section className="social-section"><details className="photo-references"><summary><ImageIcon size={19}/> 参考：写真の原資料を見る <ChevronDown size={18}/></summary><p>文字を読み取り、上の解説として整理しています。原資料にある地図・図解や詳しい文章もここから確認できます。</p>{topic.sourceImages.map(im=><figure key={im.src}><img src={im.src} loading="lazy" alt={im.caption}/><figcaption>{im.caption}</figcaption></figure>)}</details></section>}
    <div className="social-action-card"><div><strong>内容を理解できましたか？</strong><p>次は4択問題で理解度を確認しましょう。</p></div><button className="primary" onClick={openQuiz}>問題に挑戦する <ArrowRight size={18}/></button></div>
   </>:<>
    <div className="social-quiz-toolbar"><span>{reviewOnly?'前回間違えた問題':'この単元の確認問題'}</span><label>出題範囲 <select value={reviewOnly?'wrong':'all'} onChange={e=>{setReviewOnly(e.target.value==='wrong');setReviewIds(topic.questions.filter(q=>history[q.id]?.lastCorrect===false).map(q=>q.id));resetAnswer()}}><option value="all">すべての問題</option><option value="wrong">前回間違えた問題</option></select></label></div>
