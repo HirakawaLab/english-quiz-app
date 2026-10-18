@@ -2,13 +2,13 @@ import React,{useEffect,useMemo,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BookOpen,Camera,ClipboardCheck,RotateCcw,Trash2,Plus,Download,Upload,ChevronLeft,ChevronRight} from 'lucide-react';
 import {createWorker} from 'tesseract.js';
-import {Question,samples,blankQuestion,parseOcr} from './data';
+import {Question,samples,addedQuestions,blankQuestion,parseOcr} from './data';
 import './style.css';
 type Tab='study'|'import'|'library';
 type History=Record<string,{attempts:number;correct:number;lastCorrect:boolean}>;
 function load<T>(key:string,fallback:T):T{try{const s=localStorage.getItem(key);return s?JSON.parse(s) as T:fallback}catch{return fallback}}
 function App(){
- const [tab,setTab]=useState<Tab>('study');const [questions,setQuestions]=useState<Question[]>(()=>load('english-quiz-questions-v1',samples));
+ const [tab,setTab]=useState<Tab>('study');const [questions,setQuestions]=useState<Question[]>(()=>{const existing=load<Question[]>('english-quiz-questions-v1',samples);const ids=new Set(existing.map(q=>q.id));return [...existing,...addedQuestions.filter(q=>!ids.has(q.id))]});
  const [history,setHistory]=useState<History>(()=>load('english-quiz-history-v1',{}));
  const [mode,setMode]=useState<'all'|'wrong'>('all');const [index,setIndex]=useState(0);const [selected,setSelected]=useState<number|null>(null);const [shown,setShown]=useState(false);
  const [drafts,setDrafts]=useState<Question[]>([]);const [ocrText,setOcrText]=useState('');const [busy,setBusy]=useState(false);const [progress,setProgress]=useState('');const [notice,setNotice]=useState('');

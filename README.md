@@ -36,9 +36,3 @@ npm run build
 - 問題と学習履歴はブラウザの localStorage に保存されます。ブラウザのデータ消去・別端末では消失するためバックアップを推奨します。
 - 写真はOCR処理のためブラウザ内で扱い、アプリ独自のサーバーにはアップロードしません。初回OCRのエンジン・言語データ取得には外部通信があります。
 - 書籍の問題を登録・公開する場合は著作権と利用条件に注意してください。
-
-## GitHub Pages への公開
-
-GitHub リポジトリの Settings → Pages で、Build and deployment の Source を「GitHub Actions」に設定してください。
-`main` または `master` ブランチへ push すると、GitHub Actions がビルドして GitHub Pages に公開します。
-公開URLと実行状況は、リポジトリの Actions タブおよび Settings → Pages で確認できます。
