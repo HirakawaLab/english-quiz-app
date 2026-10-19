@@ -8,16 +8,26 @@ import SocialPage from './SocialPage';
 type Tab='study'|'import'|'library';
 type Subject='english'|'social';
 type History=Record<string,{attempts:number;correct:number;lastCorrect:boolean}>;
+type QuizMode='all'|'wrong';
+type EnglishProgress={mode:QuizMode;index:number;selected:number|null;shown:boolean};
 function load<T>(key:string,fallback:T):T{try{const s=localStorage.getItem(key);return s?JSON.parse(s) as T:fallback}catch{return fallback}}
+function readEnglishProgress():EnglishProgress{
+ const saved=load<Partial<EnglishProgress>>('english-quiz-progress-v1',{});
+ const selected=Number.isInteger(saved.selected)&&saved.selected!>=0&&saved.selected!<4?saved.selected!:null;
+ return {mode:saved.mode==='wrong'?'wrong':'all',index:Number.isInteger(saved.index)&&saved.index!>=0?saved.index!:0,selected,shown:saved.shown===true&&selected!==null};
+}
 function App(){
- const [subject,setSubject]=useState<Subject>('english');
+ const [subject,setSubject]=useState<Subject>(()=>load<Subject>('study-subject-v1','english')==='social'?'social':'english');
  const [tab,setTab]=useState<Tab>('study');const [questions,setQuestions]=useState<Question[]>(()=>{const existing=load<Question[]>('english-quiz-questions-v1',samples);const ids=new Set(existing.map(q=>q.id));return [...existing,...[...addedQuestions,...additionalPhotoQuestions,...originalPracticeQuestions,...originalPracticeQuestions2,...originalPracticeQuestions3].filter(q=>!ids.has(q.id))]});
  const [history,setHistory]=useState<History>(()=>load('english-quiz-history-v1',{}));
- const [mode,setMode]=useState<'all'|'wrong'>('all');const [index,setIndex]=useState(0);const [selected,setSelected]=useState<number|null>(null);const [shown,setShown]=useState(false);
+ const [savedProgress]=useState(readEnglishProgress);const [mode,setMode]=useState<QuizMode>(savedProgress.mode);const [index,setIndex]=useState(savedProgress.index);const [selected,setSelected]=useState<number|null>(savedProgress.selected);const [shown,setShown]=useState(savedProgress.shown);
  const [drafts,setDrafts]=useState<Question[]>([]);const [ocrText,setOcrText]=useState('');const [busy,setBusy]=useState(false);const [progress,setProgress]=useState('');const [notice,setNotice]=useState('');
  useEffect(()=>localStorage.setItem('english-quiz-questions-v1',JSON.stringify(questions)),[questions]);
  useEffect(()=>localStorage.setItem('english-quiz-history-v1',JSON.stringify(history)),[history]);
+ useEffect(()=>localStorage.setItem('study-subject-v1',subject),[subject]);
  const pool=useMemo(()=>questions.filter(q=>q.answer!==null&&(mode==='all'||(history[q.id]&&history[q.id].lastCorrect===false))),[questions,mode,history]);
+ useEffect(()=>{if(index>=pool.length&&pool.length>0){setIndex(pool.length-1);setSelected(null);setShown(false)}},[index,pool.length]);
+ useEffect(()=>localStorage.setItem('english-quiz-progress-v1',JSON.stringify({mode,index,selected,shown})),[mode,index,selected,shown]);
  const active=pool[Math.min(index,pool.length-1)];const totalAttempts=Object.values(history).reduce((s,h)=>s+h.attempts,0);const totalCorrect=Object.values(history).reduce((s,h)=>s+h.correct,0);
  function switchTab(t:Tab){setTab(t);setNotice('')}
  function check(){if(!active||selected===null||shown)return;setShown(true);setHistory(h=>{const old=h[active.id]??{attempts:0,correct:0,lastCorrect:false};return {...h,[active.id]:{attempts:old.attempts+1,correct:old.correct+(selected===active.answer?1:0),lastCorrect:selected===active.answer}}})}

@@ -4,18 +4,32 @@ import {socialTopics,type SocialTopic} from './socialData';
 
 type SocialHistory = Record<string,{attempts:number;correct:number;lastCorrect:boolean}>;
 const HISTORY_KEY='study-social-history-v1';
+const PROGRESS_KEY='study-social-progress-v1';
+type SocialProgress={topicId:SocialTopic['id'];view:'read'|'quiz';index:number;selected:number|null;revealed:boolean;reviewOnly:boolean;reviewIds:string[]};
 function readHistory():SocialHistory{try{const raw=localStorage.getItem(HISTORY_KEY);return raw?JSON.parse(raw) as SocialHistory:{}}catch{return {}}}
+function readProgress():SocialProgress{
+ try{
+  const raw=localStorage.getItem(PROGRESS_KEY);
+  if(!raw)return {topicId:'orient',view:'read',index:0,selected:null,revealed:false,reviewOnly:false,reviewIds:[]};
+  const saved=JSON.parse(raw) as Partial<SocialProgress>;
+  const topicId=socialTopics.some(topic=>topic.id===saved.topicId)?saved.topicId as SocialTopic['id']:'orient';
+  const selected=Number.isInteger(saved.selected)&&saved.selected!>=0&&saved.selected!<4?saved.selected!:null;
+  return {topicId,view:saved.view==='quiz'?'quiz':'read',index:Number.isInteger(saved.index)&&saved.index!>=0?saved.index!:0,selected,revealed:saved.revealed===true&&selected!==null,reviewOnly:saved.reviewOnly===true,reviewIds:Array.isArray(saved.reviewIds)?saved.reviewIds.filter((id):id is string=>typeof id==='string'):[]};
+ }catch{return {topicId:'orient',view:'read',index:0,selected:null,revealed:false,reviewOnly:false,reviewIds:[]}}
+}
 
 export default function SocialPage(){
- const [topicId,setTopicId]=useState<SocialTopic['id']>('orient');
- const [view,setView]=useState<'read'|'quiz'>('read');
- const [index,setIndex]=useState(0);
- const [selected,setSelected]=useState<number|null>(null);
- const [revealed,setRevealed]=useState(false);
+ const [savedProgress]=useState(readProgress);
+ const [topicId,setTopicId]=useState<SocialTopic['id']>(savedProgress.topicId);
+ const [view,setView]=useState<'read'|'quiz'>(savedProgress.view);
+ const [index,setIndex]=useState(savedProgress.index);
+ const [selected,setSelected]=useState<number|null>(savedProgress.selected);
+ const [revealed,setRevealed]=useState(savedProgress.revealed);
  const [history,setHistory]=useState<SocialHistory>(readHistory);
- const [reviewOnly,setReviewOnly]=useState(false);
- const [reviewIds,setReviewIds]=useState<string[]>([]);
+ const [reviewOnly,setReviewOnly]=useState(savedProgress.reviewOnly);
+ const [reviewIds,setReviewIds]=useState<string[]>(savedProgress.reviewIds);
  useEffect(()=>localStorage.setItem(HISTORY_KEY,JSON.stringify(history)),[history]);
+ useEffect(()=>localStorage.setItem(PROGRESS_KEY,JSON.stringify({topicId,view,index,selected,revealed,reviewOnly,reviewIds})),[topicId,view,index,selected,revealed,reviewOnly,reviewIds]);
  const topic=socialTopics.find(t=>t.id===topicId)!;
  const pool=useMemo(()=>reviewOnly?topic.questions.filter(q=>reviewIds.includes(q.id)):topic.questions,[topic,reviewOnly,reviewIds]);
  const current=pool[index]??pool[0];
