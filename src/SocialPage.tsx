@@ -49,9 +49,10 @@ export default function SocialPage(){
  };
  const navigate=(direction:number)=>{setIndex(i=>Math.max(0,Math.min(pool.length-1,i+direction)));setSelected(null);setRevealed(false)};
  return <div className="social-app">
-  <div className="social-hero"><div><span className="eyebrow">HISTORY · WORLD HISTORY</span><h1>社会 <span>世界史を学ぶ</span></h1><p>解説で流れをつかみ、4択問題で理解を確認しましょう。</p></div><div className="social-hero-actions"><button className="social-one-question-button" onClick={openOneQuestionMode}><GraduationCap size={19}/> 世界史一問一答 <span>8問</span></button><div className="social-hero-stats"><span>学習済み</span><strong>{totalSolved}<small> / {allQuestions.length} 問</small></strong></div></div></div>
+  <div className="social-hero"><div><span className="eyebrow">HISTORY · WORLD HISTORY</span><h1>社会 <span>世界史を学ぶ</span></h1><p>解説で流れをつかみ、4択問題で理解を確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{totalSolved}<small> / {allQuestions.length} 問</small></strong></div></div>
   {oneQuestionMode?<div className="social-one-question-head"><div><span className="chapter-era">古代オリエント</span><h2>世界史一問一答</h2><p>追加された8問で、古代オリエントの重要事項を確認しましょう。</p></div><button className="ghost" onClick={exitOneQuestionMode}><Library size={16}/> 単元学習に戻る</button></div>:<>
   <div className="social-topic-tabs" role="group" aria-label="学習テーマ">
+   <button className="one-question-topic" onClick={openOneQuestionMode}><GraduationCap size={18}/><span><strong>世界史一問一答</strong><small>古代オリエントの重要事項を確認</small></span><span className="social-topic-count">8問</span></button>
    {socialTopics.map(t=><button key={t.id} className={topicId===t.id?'current':''} onClick={()=>chooseTopic(t.id)}><Library size={18}/><span><strong>{t.title}</strong><small>{t.subtitle}</small></span><span className="social-topic-count">{t.questions.length}問</span></button>)}
   </div>
   <div className="social-breadcrumb"><span>社会</span><span>›</span><span>{topic.title}</span></div>
