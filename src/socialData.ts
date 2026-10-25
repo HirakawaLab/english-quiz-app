@@ -2,7 +2,7 @@ export type SocialSection = {heading:string;body:string;highlights?:string[]};
 export type SocialQuestion = {
  id:string; title:string; prompt:string;
  choices:[string,string,string,string]; answer:number;
- explanation:string; source:string;
+ explanation:string; source:string; category?:'one-question';
 };
 export type SocialTopic = {
  id:'orient'|'greece'|'ancient-india'|'korean-history'|'hellenistic-iran'|'early-china'|'qin-han'|'sui-tang'|'song-liao-xixia-jin'|'ming'|'qing'|'mongol-yuan'|'germanic-peoples'|'frankish-kingdom'|'roman-republic'|'roman-empire'|'byzantine-empire'|'crusades'|'medieval-germany-iberia'|'feudalism-manorialism'|'papacy'|'medieval-england-france'|'slavs'|'medieval-trade'|'normans'|'medieval-culture'|'reformation'|'prehistory'|'premodern-southeast-asia'|'chinese-culture-1'|'chinese-culture-2'|'inner-asia-trade'|'islamic-world'|'islamic-culture'|'islamic-fragmentation'|'islamic-empires'|'wei-jin-nanbei'; title:string; subtitle:string;
@@ -44,7 +44,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q3',title:'確認問題　肥沃な三日月地帯',
     prompt:'メソポタミアからシリア・パレスチナにかけて広がる、農耕文明が早くから発達した地域は何と呼ばれるでしょう。',
     choices:['肥沃な三日月地帯','インダス川流域','アナトリア高原','ナイル川デルタ'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'メソポタミアからシリア・パレスチナにかけての地域は、肥沃な三日月地帯と呼ばれます。農耕に適した土地が三日月形に広がっています。',
     source:'添付資料　オリエントの基本事項'
    },
@@ -52,7 +52,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q4',title:'確認問題　シュメール人',
     prompt:'ウルやウルクなどの都市国家を築き、楔形文字を用いた民族はどれでしょう。',
     choices:['シュメール人','フェニキア人','ヘブライ人','アラム人'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'シュメール人はメソポタミアにウルやウルクなどの都市国家を築き、楔形文字を用いました。',
     source:'添付資料　オリエントの基本事項'
    },
@@ -60,7 +60,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q5',title:'確認問題　古代エジプト',
     prompt:'「エジプトはナイルのたまもの」という言葉で知られる古代ギリシアの歴史家は誰でしょう。',
     choices:['ヘロドトス','トゥキディデス','ポリュビオス','ストラボン'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'ヘロドトスは、ナイル川がエジプトの文明と生活を支えたことを「エジプトはナイルのたまもの」と表現しました。',
     source:'添付資料　オリエントの基本事項'
    },
@@ -68,7 +68,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q6',title:'確認問題　地中海東岸の交易',
     prompt:'シドンやティルスを拠点に地中海交易で活躍し、アルファベットの起源となる文字を広めた民族はどれでしょう。',
     choices:['フェニキア人','アラム人','ヒッタイト人','アッシリア人'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'フェニキア人はシドンやティルスを拠点に地中海交易で活躍し、その文字はギリシア文字などのアルファベットの起源となりました。',
     source:'添付資料　地中海東岸の諸民族'
    },
@@ -76,7 +76,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q7',title:'確認問題　内陸交易',
     prompt:'ダマスクスを拠点として内陸交易で活躍し、広い地域で共通語として使われたアラム語を広めた民族はどれでしょう。',
     choices:['アラム人','フェニキア人','ヘブライ人','エジプト人'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'アラム人はダマスクスを拠点に内陸交易で活躍し、アラム語は西アジアの広い地域で用いられました。',
     source:'添付資料　地中海東岸の諸民族'
    },
@@ -84,7 +84,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q8',title:'確認問題　バビロン捕囚',
     prompt:'ユダ王国を滅ぼし、住民をバビロンへ連行した国はどれでしょう。',
     choices:['新バビロニア王国','アッシリア','アケメネス朝ペルシア','古バビロニア王国'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'新バビロニア王国はユダ王国を滅ぼし、住民をバビロンへ連行しました。この出来事をバビロン捕囚といいます。',
     source:'添付資料　地中海東岸の諸民族'
    },
@@ -92,7 +92,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q9',title:'確認問題　オリエントの最初の統一',
     prompt:'前7世紀にオリエントを初めて統一した国はどれでしょう。',
     choices:['アッシリア','アケメネス朝ペルシア','新バビロニア王国','リディア'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'アッシリアは前7世紀にオリエントを初めて統一しました。その後、アッシリアが滅びたのちにアケメネス朝ペルシアが再統一します。',
     source:'添付資料　オリエントの統一'
    },
@@ -100,7 +100,7 @@ export const socialTopics:SocialTopic[] = [
     id:'social-orient-q10',title:'確認問題　ペルシアの再統一',
     prompt:'アッシリア滅亡後にオリエントを再統一し、ダレイオス1世の時代に最盛期を迎えた王朝はどれでしょう。',
     choices:['アケメネス朝ペルシア','セレウコス朝','パルティア','ササン朝ペルシア'],
-    answer:0,
+     answer:0,category:'one-question',
     explanation:'アケメネス朝ペルシアは前6世紀にオリエントを再統一し、ダレイオス1世の時代に最盛期を迎えました。前4世紀、アレクサンドロス大王の遠征で滅亡しました。',
     source:'添付資料　オリエントの統一'
    }
