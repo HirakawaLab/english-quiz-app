@@ -1,6 +1,7 @@
 import {useEffect,useMemo,useState} from 'react';
 import {ArrowLeft,ArrowRight,BookOpen,CheckCircle2,ChevronDown,Clock3,GraduationCap,Image as ImageIcon,Library,RotateCcw} from 'lucide-react';
 import {socialTopics,type SocialQuestion,type SocialTopic} from './socialData';
+import {extraOneQuestions} from './oneqExtra';
 
 type SocialHistory = Record<string,{attempts:number;correct:number;lastCorrect:boolean}>;
 const HISTORY_KEY='study-social-history-v1';
@@ -45,7 +46,7 @@ export default function SocialPage({oneQuestionOnly=false}:{oneQuestionOnly?:boo
  useEffect(()=>localStorage.setItem(HISTORY_KEY,JSON.stringify(history)),[history]);
  useEffect(()=>localStorage.setItem(progressKey,JSON.stringify({topicId,view,index,selected,revealed,reviewOnly,reviewIds})),[progressKey,topicId,view,index,selected,revealed,reviewOnly,reviewIds]);
  const topic=socialTopics.find(t=>t.id===topicId)!;
- const oneQuestions=useMemo(()=>socialTopics.flatMap(t=>t.questions).filter(q=>q.category==='one-question').map(shuffleChoices),[]);
+ const oneQuestions=useMemo(()=>[...socialTopics.flatMap(t=>t.questions).filter(q=>q.category==='one-question'),...extraOneQuestions].map(shuffleChoices),[]);
  const topicQuestions=useMemo(()=>topic.questions.filter(q=>q.category!=='one-question'),[topic]);
  const eligibleQuestions=oneQuestionMode?oneQuestions:topicQuestions;
  const pool=useMemo(()=>reviewOnly?eligibleQuestions.filter(q=>reviewIds.includes(q.id)):eligibleQuestions,[eligibleQuestions,reviewOnly,reviewIds]);
@@ -64,7 +65,7 @@ export default function SocialPage({oneQuestionOnly=false}:{oneQuestionOnly?:boo
  };
  const navigate=(direction:number)=>{setIndex(i=>Math.max(0,Math.min(pool.length-1,i+direction)));setSelected(null);setRevealed(false)};
  return <div className="social-app">
-  {oneQuestionMode?<div className="social-hero"><div><span className="eyebrow">WORLD HISTORY · ONE QUESTION</span><h1>世界史一問一答 <span>全{oneQuestionCount}問</span></h1><p>古代オリエント・古代ギリシア・古代ローマの重要事項を、1問ずつ確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{oneQuestionSolved}<small> / {oneQuestionCount} 問</small></strong></div></div>:<div className="social-hero"><div><span className="eyebrow">HISTORY · WORLD HISTORY</span><h1>社会 <span>世界史を学ぶ</span></h1><p>解説で流れをつかみ、4択問題で理解を確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{totalSolved}<small> / {allQuestions.length} 問</small></strong></div></div>}
+  {oneQuestionMode?<div className="social-hero"><div><span className="eyebrow">WORLD HISTORY · ONE QUESTION</span><h1>世界史一問一答 <span>全{oneQuestionCount}問</span></h1><p>古代から近世までの世界史の重要事項を、1問ずつ確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{oneQuestionSolved}<small> / {oneQuestionCount} 問</small></strong></div></div>:<div className="social-hero"><div><span className="eyebrow">HISTORY · WORLD HISTORY</span><h1>社会 <span>世界史を学ぶ</span></h1><p>解説で流れをつかみ、4択問題で理解を確認しましょう。</p></div><div className="social-hero-stats"><span>学習済み</span><strong>{totalSolved}<small> / {allQuestions.length} 問</small></strong></div></div>}
   {!oneQuestionMode&&<>
   <div className="social-topic-tabs" role="group" aria-label="学習テーマ">
    {socialTopics.map(t=><button key={t.id} className={topicId===t.id?'current':''} onClick={()=>chooseTopic(t.id)}><Library size={18}/><span><strong>{t.title}</strong><small>{t.subtitle}</small></span><span className="social-topic-count">{t.questions.filter(q=>q.category!=='one-question').length}問</span></button>)}
